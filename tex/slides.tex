@@ -26,10 +26,10 @@
   \setbeamercolor*{institute in head/foot}{parent=footline}
 
   \setbeamercolor{block title}{fg=white,bg=blue-palatinate}
-  \setbeamercolor{block body}{parent=normal text,bg=blue-palatinate!10}
+  \setbeamercolor{block body}{parent=normal text,bg=pale-palatinate!5}
 
   \setbeamercolor{block title example}{fg=white,bg=dirt-palatinate}
-  \setbeamercolor{block body example}{parent=normal text,bg=dirt-palatinate!10}
+  \setbeamercolor{block body example}{parent=normal text,bg=dirt-palatinate!5}
 
   \setbeamertemplate{blocks}[rounded][shadow=true]
   \setbeamertemplate{caption}[numbered]
@@ -38,8 +38,12 @@
   % \setbeamertemplate{navigation symbols}{}
 \usepackage[style=science,backend=bibtex]{biblatex}
   \bibliography{references.bib}
+\usepackage[labelfont={footnotesize,it},textfont={footnotesize,it}]{caption}
 \usepackage[utf8]{inputenc}
 \usepackage{tikz}
+  \usetikzlibrary{calc}
+  \usetikzlibrary{external}
+    \tikzexternalize[prefix=tikz/]
   \usetikzlibrary{positioning}
   \usetikzlibrary{shapes.geometric}
   \usetikzlibrary{shapes.misc}
@@ -64,62 +68,82 @@
 \begin{frame}{\subsecname}
   \begin{columns}
 
-    \column{0.4\textwidth}
-      \begin{figure}[!h]
-        \centering
-        \small
-        \begin{tikzpicture}[%
-          hexagon/.style={regular polygon,regular polygon sides=6},
-          cell/.pic={%
-            \coordinate (-O) at (0,0);
-            \node (-wall) [%
-              anchor=center,
-              draw,
-              hexagon,
-              rounded corners=0.5em,
-              pic actions,
-              minimum size=2em,
-              inner sep=0pt,
-              outer sep=2em/3,
-            ] at (-O) {};
+    \column{0.5\textwidth}
+      \begin{block}{What is selective drug delivery?}
+        \begin{figure}
+          \small
+          \begin{tikzpicture}[%
+            hexagon/.style={regular polygon,regular polygon sides=6},
+            cell/.pic={%
+              \coordinate (-O) at (0,0);
+              \node [%
+                anchor=center,
+                draw,
+                hexagon,
+                rounded corners=2em/4,
+                minimum size=2em,
+                inner sep=0pt,
+                outer sep=2em/3,
+                pic actions,
+              ] (-wall) at (-O) {};
+              \node [%
+                anchor=center,
+                fill,
+                hexagon,
+                rounded corners=0.8em/4,
+                minimum size=0.8em,
+                inner sep=0pt,
+                outer sep=0pt,
+                pic actions,
+              ] (-nucleus) at (-O) {};
+            },
+            tissue/.pic={%
+              \coordinate (-O) at (0,0);
+              \pic (-cell 0) at (0,2em/3) {cell};
+              \foreach \i in {3,...,6}
+                \pic (-cell \i) at (-cell 0-wall.corner \i) {cell};
+            }
+          ]
+            \node [palatinate] (healthy) {healthy tissue};
+            \coordinate [below=2.5em of healthy] (healthy general);
+            \coordinate [below=5em of healthy general] (healthy selective);
+            \pic [palatinate] at (healthy selective) {tissue};
+            \pic [palatinate] at (healthy general) {tissue};
+            \foreach \x in {1,...,100}
+              \fill [blue-palatinate] ($(1.5*2em*rand,2em*rand)+(healthy general)$) circle (0.1em);
+            \foreach \x in {1,...,10}
+              \fill [blue-palatinate] ($(1.5*2em*rand,2em*rand)+(healthy selective)$) circle (0.1em);
+
             \node [%
-              anchor=center,
-              fill,
-              hexagon,
-              rounded corners=0.2em,
-              pic actions,
-              minimum size=0.8em,
-              inner sep=0pt,
-              outer sep=0pt,
-            ] at (-O) {};
-          },
-          tissue/.pic={%
-            \coordinate (-O) at (0,0);
-            \pic (-cell 0) at (-O) {cell};
-            \foreach \i in {3,...,6}
-              \pic (-cell \i) at (-cell 0-wall.corner \i) {cell};
-          }
-        ]
-          \coordinate (O) at (0,0);
+              palatinate,
+              align=center,
+              base right=1em of healthy,
+            ] (diseased) {diseased tissue};
+            \coordinate [below=2.5em of diseased] (diseased general);
+            \coordinate [below=5em of diseased general] (diseased selective);
+            \pic [palatinate] at (diseased selective) {tissue};
+            \pic [palatinate] at (diseased general) {tissue};
+            \foreach \x in {101,...,200}
+              \fill [blue-palatinate] ($(1.5*2em*rand,2em*rand)+(diseased general)$) circle (0.1em);
+            \foreach \x in {11,...,200}
+              \fill [blue-palatinate] ($(1.5*2em*rand,2em*rand)+(diseased selective)$) circle (0.1em);
 
-          \node (diseased) [blue-palatinate,right=of O] {diseased};
-          \pic [blue-palatinate,above=of diseased] {tissue};
+            \node [blue-palatinate,align=right,left=3.5em of healthy general] {general\\drug};
+            \node [blue-palatinate,align=right,left=3.5em of healthy selective] {selective\\drug};
+          \end{tikzpicture}
+          \caption{Illustration of selective drug delivery.}
+        \end{figure}
+      \end{block}
 
-          \node (healthy) [palatinate,left=of O] {healthy};
-          \pic [palatinate,above=of healthy] {tissue};
-        \end{tikzpicture}
-        \caption{Some figure}
-      \end{figure}
-
-    \column{0.4\textwidth}
-      \begin{block}{Target diseased tissue}
+    \column{0.5\textwidth}
+      \begin{block}{Targets diseased tissue}
         \begin{itemize}
           \item<1-> Maximise therapeutic effects
           \item<1-> Minimise effective drug dose
         \end{itemize}
       \end{block}
 
-      \begin{block}{Avoid healthy tissue}
+      \begin{block}{Avoids healthy tissue}
         \begin{itemize}
           \item<1-> Minimise side-effects
         \end{itemize}
