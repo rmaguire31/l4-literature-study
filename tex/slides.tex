@@ -25,21 +25,32 @@
   \setbeamercolor*{author in head/foot}{parent=footline}
   \setbeamercolor*{institute in head/foot}{parent=footline}
 
-  \setbeamercolor{block title}{fg=white,bg=blue-palatinate}
-  \setbeamercolor{block body}{parent=normal text,bg=pale-palatinate!5}
+  \setbeamercolor*{alerted text}{parent=normal text,fg=palatinate}
 
-  \setbeamercolor{block title example}{fg=white,bg=dirt-palatinate}
-  \setbeamercolor{block body example}{parent=normal text,bg=dirt-palatinate!5}
+  \setbeamercolor*{block title}{fg=white,bg=blue-palatinate}
+  \setbeamercolor*{block body}{parent=normal text,bg=pale-palatinate!5}
 
+  \setbeamercolor*{block title example}{fg=white,bg=dirt-palatinate}
+  \setbeamercolor*{block body example}{parent=normal text,bg=dirt-palatinate!5}
+
+  \setbeamertemplate{bibliography item}[text]
   \setbeamertemplate{blocks}[rounded][shadow=true]
   \setbeamertemplate{caption}[numbered]
-
-  \setbeamerfont{footnote}{size=\tiny}
   % \setbeamertemplate{navigation symbols}{}
-\usepackage[style=science,backend=bibtex]{biblatex}
+  \setbeamertemplate{title page}[default][rounded=true,shadow=true]
+
+  \setbeamerfont{block title}{size=\small}
+
+  \BeforeBeginEnvironment{frame}{\citereset}
+\usepackage[style=science,citestyle=numeric-comp]{biblatex}
   \bibliography{references.bib}
-\usepackage[labelfont={footnotesize,it},textfont={footnotesize,it}]{caption}
+\usepackage[%
+  format=hang,
+  labelfont={footnotesize,bf},
+  textfont={footnotesize,it}
+]{caption}
 \usepackage[utf8]{inputenc}
+\usepackage{siunitx}
 \usepackage{tikz}
   \usetikzlibrary{calc}
   \usetikzlibrary{external}
@@ -48,8 +59,11 @@
   \usetikzlibrary{shapes.geometric}
   \usetikzlibrary{shapes.misc}
 
+\renewcommand*{\footnotefont}{\tiny}
+\renewcommand*{\bibfont}{\footnotesize}
+
 \author{Russell Maguire}
-\title{Nanocarriers for selective drug delivery}
+\title{Nanocarriers for targeted drug delivery}
 \subtitle{Benefits and challenges of nanotechnology for medicine}
 \institute{ENGI4131 Advanced Semiconductor Devices \and Durham University}
 \date{\today}
@@ -64,19 +78,50 @@
 
 \section{Introduction}
 
-\subsection{Selective drug delivery}
+\subsection{Nanocarrier delivery systems}
+\begin{frame}{\subsecname}
+  \begin{columns}
+    \column{0.5\textwidth}
+    \column{0.5\textwidth}
+      \begin{block}{Definition: nanocarrier}
+        \begin{itemize}
+          \item Biocompatible nanoparticle encapsulating a drug
+        \end{itemize}
+      \end{block}
+
+      \begin{block}{Characteristics}
+        \begin{columns}[t,onlytextwidth]
+          \column{0.5\textwidth}\vskip-1em
+            \begin{itemize}
+              \item \alert{Nanometre scale}
+              \item \alert{Low toxicity}
+            \end{itemize}
+          \column{0.5\textwidth}\vskip-1em
+            \begin{itemize}
+              \item \alert{Hydrophilic}
+              \item \alert{Soluble}
+            \end{itemize}
+        \end{columns}
+      \end{block}
+
+  \end{columns}
+\end{frame}
+
+\subsection{Targeted drug delivery}
 \begin{frame}{\subsecname}
   \begin{columns}
 
     \column{0.5\textwidth}
-      \begin{block}{What is selective drug delivery?}
+      \begin{block}{How is targeted drug delivery effective?}
         \begin{figure}
           \small
+          \centering
           \begin{tikzpicture}[%
             hexagon/.style={regular polygon,regular polygon sides=6},
             cell/.pic={%
               \coordinate (-O) at (0,0);
               \node [%
+                thick,
                 anchor=center,
                 draw,
                 hexagon,
@@ -104,15 +149,17 @@
                 \pic (-cell \i) at (-cell 0-wall.corner \i) {cell};
             }
           ]
-            \node [palatinate] (healthy) {healthy tissue};
+            \node [%
+              palatinate,
+            ] (healthy) {healthy tissue};
             \coordinate [below=2.5em of healthy] (healthy general);
-            \coordinate [below=5em of healthy general] (healthy selective);
-            \pic [palatinate] at (healthy selective) {tissue};
+            \coordinate [below=5em of healthy general] (healthy targeted);
+            \pic [palatinate] at (healthy targeted) {tissue};
             \pic [palatinate] at (healthy general) {tissue};
             \foreach \x in {1,...,100}
               \fill [blue-palatinate] ($(1.5*2em*rand,2em*rand)+(healthy general)$) circle (0.1em);
             \foreach \x in {1,...,10}
-              \fill [blue-palatinate] ($(1.5*2em*rand,2em*rand)+(healthy selective)$) circle (0.1em);
+              \fill [blue-palatinate] ($(1.5*2em*rand,2em*rand)+(healthy targeted)$) circle (0.1em);
 
             \node [%
               palatinate,
@@ -120,44 +167,137 @@
               base right=1em of healthy,
             ] (diseased) {diseased tissue};
             \coordinate [below=2.5em of diseased] (diseased general);
-            \coordinate [below=5em of diseased general] (diseased selective);
-            \pic [palatinate] at (diseased selective) {tissue};
+            \coordinate [below=5em of diseased general] (diseased targeted);
+            \pic [palatinate] at (diseased targeted) {tissue};
             \pic [palatinate] at (diseased general) {tissue};
             \foreach \x in {101,...,200}
               \fill [blue-palatinate] ($(1.5*2em*rand,2em*rand)+(diseased general)$) circle (0.1em);
             \foreach \x in {11,...,200}
-              \fill [blue-palatinate] ($(1.5*2em*rand,2em*rand)+(diseased selective)$) circle (0.1em);
+              \fill [blue-palatinate] ($(1.5*2em*rand,2em*rand)+(diseased targeted)$) circle (0.1em);
 
-            \node [blue-palatinate,align=right,left=3.5em of healthy general] {general\\drug};
-            \node [blue-palatinate,align=right,left=3.5em of healthy selective] {selective\\drug};
+            \node [%
+              blue-palatinate,
+              align=right,
+              left=3.5em of healthy general,
+            ] {general\\drug};
+            \node [%
+              blue-palatinate,
+              align=right,
+              left=3.5em of healthy targeted,
+            ] {targeted\\drug};
           \end{tikzpicture}
-          \caption{Illustration of selective drug delivery.}
+          \caption{Goal is to increase drug concentration ratio for diseased tissue.}
         \end{figure}
       \end{block}
 
     \column{0.5\textwidth}
       \begin{block}{Targets diseased tissue}
         \begin{itemize}
-          \item<1-> Maximise therapeutic effects
-          \item<1-> Minimise effective drug dose
+          \item Maximise therapeutic effects
+          \item Minimise effective drug dose
         \end{itemize}
       \end{block}
 
       \begin{block}{Avoids healthy tissue}
         \begin{itemize}
-          \item<1-> Minimise side-effects
+          \item Minimise side-effects
         \end{itemize}
       \end{block}
 
   \end{columns}
 \end{frame}
 
-\subsection{Nanocarrier delivery systems}
+\section{Passive targeting}
+
+\subsection{Vascular permeability}
 \begin{frame}{\subsecname}
-  \begin{itemize}
-    \item<1-> pH
-    \item<1->
-  \end{itemize}
+  \begin{columns}
+    \column{0.5\textwidth}
+    \column{0.5\textwidth}
+      \begin{block}{Definition: vascular permeability}
+        \begin{itemize}
+          \item Tendency for molecules to leak from \alert{blood~vessels} into \alert{interstitial~space} between cells.
+        \end{itemize}
+      \end{block}
+
+      \begin{block}{Contributing factors}
+        \begin{itemize}
+          \item Permeability enhancers such as \emph{bradykinin} and \emph{nitric oxide}
+          \item Dense and defective vascular network
+          \item Enhanced vascular permeability has been observed in \alert{solid~tumours} and \alert{inflamed~tissue}~\footcitemark{maeda2000tumor}
+        \end{itemize}
+      \end{block}
+
+  \end{columns}
+  \footcitetext{maeda2000tumor}
 \end{frame}
 
-\end{document}
+\subsection{\textbf{E}nhanced \textbf{P}ermeability and \textbf{R}etention effect}
+\begin{frame}{\subsecname}
+  \begin{columns}
+    \column{0.5\textwidth}
+    \column{0.5\textwidth}
+      \begin{block}{Definition: EPR effect}
+        \begin{itemize}
+          \item Tendency for large molecules, such as nanocarriers, to accumulate in \alert{solid~tumours} and \alert{inflamed~tissue}
+        \end{itemize}
+      \end{block}
+
+      \begin{block}{Accumulation procedure}
+        \begin{enumerate}
+          \item Molecules leak into interstitial space due to \alert{enhanced vascular permeability}
+          \item Smaller molecules diffuse back into blood vessels and lymph nodes
+          \item Larger molecules become trapped
+        \end{enumerate}
+      \end{block}
+
+  \end{columns}
+\end{frame}
+
+\subsection{Stimuli-responsive nanocarriers}
+\begin{frame}{\subsecname}
+  \begin{columns}
+    \column{0.5\textwidth}
+    \column{0.5\textwidth}
+      \begin{block}{Biological stimuli}
+        \begin{itemize}
+          \item Tumours have been observed with lower \alert{pH} than healthy tissue~\footcitemark{gerweck1996cellular}
+          \item Organelles maintain their own unique pH and \alert{redox status}
+          \item Difference in intracellular and extracellular redox status~\footcitemark{saito2003drug}
+        \end{itemize}
+      \end{block}
+
+      \begin{block}{External stimuli}
+        \begin{columns}[t,onlytextwidth]
+          \column{0.65\textwidth}\vskip-1em
+            \begin{itemize}
+              \item \alert{Electromagnetic fields}
+              \item \alert{Ultrasound}
+            \end{itemize}
+          \column{0.35\textwidth}\vskip-1em
+            \begin{itemize}
+              \item \alert{Heat}
+              \item \alert{Light}
+            \end{itemize}
+
+        \end{columns}
+      \end{block}
+
+  \end{columns}
+  \footcitetext{gerweck1996cellular,saito2003drug}
+\end{frame}
+
+\section{Active targeting}
+
+\subsection{Surface ligands}
+
+\begin{frame}
+  \begin{beamercolorbox}[rounded=true,shadow=true,sep=8pt]{titlelike}\centering\Large
+    Thank you, any questions?
+  \end{beamercolorbox}
+  \begin{block}{References}
+    \printbibliography
+  \end{block}
+\end{frame}
+
+\end{document},
