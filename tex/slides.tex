@@ -61,7 +61,7 @@
   \usetikzlibrary{positioning}
   \usetikzlibrary{shapes.geometric}
   \usetikzlibrary{shapes.misc}
-  \usetikzlibrary{fadings}
+  \usetikzlibrary{decorations.pathmorphing}
 
   \newcommand\pgfmathsinandcos[3]{%
     \pgfmathsetmacro#1{sin(#3)}%
@@ -85,6 +85,33 @@
     \LongitudePlane{\angEl}{#2}
     \tikzset{current plane/.prefix style={scale=#1}}
     \clip[current plane] (90:1) arc (90:270:1);
+  }
+
+  % Common pic definitions
+  \tikzset{
+    drug/.pic={%
+      \path [draw=pale-palatinate,fill=blue-palatinate] (0,#1/2)
+        -- (#1/2,#1/2)
+        arc (90:-90:#1/2)
+        -- (0,-#1/2)
+        -- cycle;
+      \path [draw=pale-palatinate,fill=palatinate] (0,-#1/2)
+        -- (-#1/2,-#1/2)
+        arc (270:90:#1/2)
+        -- (0,#1/2)
+        -- cycle;
+    },
+    ligand/.pic={%
+      \fill [dirt-palatinate] (15:#1/4) 
+        -| (#1,-#1/4)
+        -| (#1-#1/8,-#1/4*sin{15})
+        -| (#1-1.5*#1/8,-#1/4)
+        -- (#1-2.5*#1/8,-#1/4)
+        |- (-15:#1/4)
+        arc (345:15:#1/4)
+        -- cycle;
+      \fill [palatinate] (0,0) circle (#1/10);
+    }
   }
 
 \renewcommand*{\footnotefont}{\tiny}
@@ -117,29 +144,6 @@
           \centering
           \begin{tikzpicture}[%
             >=latex,
-            drug/.pic={%
-              \path [draw=pale-palatinate,fill=blue-palatinate] (0,#1/2)
-                -- (#1/2,#1/2)
-                arc (90:-90:#1/2)
-                -- (0,-#1/2)
-                -- cycle;
-              \path [draw=pale-palatinate,fill=palatinate] (0,-#1/2)
-                -- (-#1/2,-#1/2)
-                arc (270:90:#1/2)
-                -- (0,#1/2)
-                -- cycle;
-            },
-            ligand/.pic={%
-              \fill [dirt-palatinate] (15:#1/4) 
-                -| (#1,-#1/4)
-                -| (#1-#1/8,-#1/4*sin{15})
-                -| (#1-1.5*#1/8,-#1/4)
-                -- (#1-2.5*#1/8,-#1/4)
-                |- (-15:#1/4)
-                arc (345:15:#1/4)
-                -- cycle;
-              \fill [palatinate] (0,0) circle (#1/10);
-            }
           ]
             \def\R{1.5}
             \def\angEl{35}
@@ -174,6 +178,25 @@
             \draw [->,blue-palatinate] (nanoparticle.west) -- (45:\R);
             \draw [->,blue-palatinate] (ligand.west) -- (0:4/3*\R);
             \draw [->,blue-palatinate] (drug.west) -- (-45:{\R/sqrt(2)});
+          \end{tikzpicture}
+          \begin{tikzpicture}[%
+            fatty acid/.pic={%
+              \foreach \t in {175,185}
+                \draw [
+                  palatinate,
+                  decorate,
+                  decoration={snake,segment length=#1/4,amplitude=#1/16},
+                ] (0,0) -- (\t:#1);
+              \filldraw [palatinate,ball color=palatinate] (0,0) circle (#1/4);
+            }
+          ]
+            \foreach \t in {15,30,...,360}
+              \pic [rotate=180+\t] at (\t:1em) {fatty acid=0.5em};
+
+            \foreach \t in {10,20,...,360} {
+              \pic [rotate=\t] at (\t:1.5em) {fatty acid=0.5em};
+            }
+
           \end{tikzpicture}
         \end{figure}
       \end{block}
@@ -254,10 +277,10 @@
             \coordinate [below=5em of healthy general] (healthy targeted);
             \pic [palatinate] at (healthy targeted) {tissue};
             \pic [palatinate] at (healthy general) {tissue};
-            \foreach \x in {1,...,100}
-              \fill [blue-palatinate] ($(1.5*2em*rand,2em*rand)+(healthy general)$) circle (0.1em);
-            \foreach \x in {1,...,10}
-              \fill [blue-palatinate] ($(1.5*2em*rand,2em*rand)+(healthy targeted)$) circle (0.1em);
+            \foreach \x in {1,...,50}
+              \pic [rotate=rand*180] at ($(1.5*2em*rand,2em*rand)+(healthy general)$) {drug=0.3em};
+            \foreach \x in {1,...,5}
+              \pic [rotate=rand*180] at ($(1.5*2em*rand,2em*rand)+(healthy targeted)$) {drug=0.3em};
 
             \node [%
               palatinate,
@@ -268,10 +291,10 @@
             \coordinate [below=5em of diseased general] (diseased targeted);
             \pic [palatinate] at (diseased targeted) {tissue};
             \pic [palatinate] at (diseased general) {tissue};
-            \foreach \x in {101,...,200}
-              \fill [blue-palatinate] ($(1.5*2em*rand,2em*rand)+(diseased general)$) circle (0.1em);
-            \foreach \x in {11,...,200}
-              \fill [blue-palatinate] ($(1.5*2em*rand,2em*rand)+(diseased targeted)$) circle (0.1em);
+            \foreach \x in {51,...,100}
+              \pic [rotate=rand*180] at ($(1.5*2em*rand,2em*rand)+(diseased general)$) {drug=0.3em};
+            \foreach \x in {6,...,100}
+              \pic [rotate=rand*180] at ($(1.5*2em*rand,2em*rand)+(diseased targeted)$) {drug=0.3em};
 
             \node [%
               blue-palatinate,
