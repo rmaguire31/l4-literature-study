@@ -31,7 +31,7 @@
   \setbeamercolor*{block body}{parent=normal text,bg=pale-palatinate!5}
 
   \setbeamercolor*{block title example}{fg=white,bg=gold-palatinate}
-  \setbeamercolor*{block body example}{parent=normal text,bg=gold-palatinate!5}
+  \setbeamercolor*{block body example}{parent=normal text,bg=pale-palatinate!5}
 
   \setbeamertemplate{bibliography item}[text]
   \setbeamertemplate{blocks}[rounded][shadow=true]
@@ -43,8 +43,10 @@
   \setbeamerfont{block title}{size=\small}
 
   \BeforeBeginEnvironment{frame}{\citereset}
+
 \usepackage[bibstyle=science,citestyle=numeric-comp]{biblatex}
   \bibliography{references.bib}
+\usepackage{calc}
 \usepackage[%
   format=hang,
   labelfont={footnotesize,bf},
@@ -96,8 +98,8 @@
     },
     drug/.pic={%
       \shadedraw [
-        pic actions,
         palatinate,
+        pic actions,
         top color=blue-palatinate!80!white,
         bottom color=blue-palatinate!80!black,
       ] (0,#1/2)
@@ -106,8 +108,52 @@
         -- (0,-#1/2)
         -- cycle;
       \shadedraw [
-        pic actions,
         palatinate,
+        pic actions,
+        top color=palatinate!80!white,
+        bottom color=palatinate!80!black,
+      ] (0,-#1/2)
+        -- (-#1/2,-#1/2)
+        arc (270:90:#1/2)
+        -- (0,#1/2)
+        -- cycle;
+    },
+    drug grey/.pic={%
+      \shadedraw [
+        grey-palatinate,
+        pic actions,
+        top color=grey-palatinate!80!white,
+        bottom color=grey-palatinate!80!black,
+      ] (0,#1/2)
+        -- (#1/2,#1/2)
+        arc (90:-90:#1/2)
+        -- (0,-#1/2)
+        -- cycle;
+      \shadedraw [
+        grey-palatinate,
+        pic actions,
+        top color=grey-palatinate!80!white,
+        bottom color=grey-palatinate!80!black,
+      ] (0,-#1/2)
+        -- (-#1/2,-#1/2)
+        arc (270:90:#1/2)
+        -- (0,#1/2)
+        -- cycle;
+    },
+    drug pos/.pic={%
+      \shadedraw [
+        palatinate,
+        pic actions,
+        top color=palatinate!80!white,
+        bottom color=palatinate!80!black,
+      ] (0,#1/2)
+        -- (#1/2,#1/2)
+        arc (90:-90:#1/2)
+        -- (0,-#1/2)
+        -- cycle;
+      \shadedraw [
+        palatinate,
+        pic actions,
         top color=palatinate!80!white,
         bottom color=palatinate!80!black,
       ] (0,-#1/2)
@@ -146,6 +192,85 @@
         decoration={random steps,segment length=#1/10,amplitude=#1/3},
         rounded corners=#1/10,
       ] (0,0) -- (#1,0);
+    },
+    pH pos/.pic={%
+      \shadedraw [
+        red,
+        top color=red!80!black,
+        bottom color=red!80!white,
+        pic actions,
+      ] (0,-#1/8) rectangle (#1,#1/8);
+    },
+    pH neg/.pic={%
+      \shadedraw [
+        black,
+        top color=black!80!black,
+        bottom color=black!80!white,
+        pic actions,
+      ] (0,-#1/8) rectangle (#1,#1/8);
+    },
+    pH poly/.pic={%
+      \shadedraw [
+        palatinate,
+        top color=palatinate!80!black,
+        bottom color=palatinate!80!white,
+        pic actions,
+      ] (0,-#1/8) rectangle (#1,#1/8);
+    },
+    protein/.pic={
+      \shadedraw [%
+        thick,
+        blue-palatinate,
+        pic actions,
+        inner color=blue-palatinate!80!white,
+        outer color=blue-palatinate!80!black,
+        decorate,
+        decoration={random steps,segment length=#1/2,amplitude=#1/2},
+        rounded corners=#1/10,
+      ] (0,0) circle (#1);
+    },
+    cell/.pic={
+      \shadedraw [%
+        thick,
+        palatinate,
+        pic actions,
+        inner color=pale-palatinate!80!white,
+        outer color=pale-palatinate!80!black,
+        decorate,
+        decoration={random steps,segment length=#1/2,amplitude=#1/4},
+        rounded corners=#1/4,
+      ] (0,0) circle (#1);
+      \shade [%
+        ball color=palatinate,
+      ] (0,0) circle (#1/3);
+    },
+    cancer cell/.pic={
+      \shadedraw [%
+        thick,
+        pic actions,
+        palatinate,
+        inner color=pale-palatinate!50!white,
+        outer color=pale-palatinate!50!black,
+        decorate,
+        decoration={random steps,segment length=#1/4,amplitude=#1/4},
+        rounded corners=#1/8,
+      ] (0,0) circle (#1);
+      \shade [%
+        ball color=palatinate,
+      ] (0,0) circle (#1/3);
+    },
+    endothelial cell/.pic={
+      \shadedraw [%
+        thick,
+        pic actions,
+        palatinate,
+        inner color=pale-palatinate!80!white,
+        outer color=pale-palatinate!80!black,
+        rounded corners=#1/4,
+      ] (-#1,-#1/2) rectangle (#1,#1/2);
+      \shade [%
+        ball color=palatinate,
+      ] (0,0) circle (#1/3);
     },
   }
 
@@ -195,8 +320,8 @@
               \begin{scope}
                 \ClipLongitudeArc[\R]{\t};
                 \shade [shading angle=180,ball color=pale-palatinate] (0,0) circle (\R);
-                \foreach \i in {1,...,30}
-                  \pic [rotate=rand*180] at (rand*180:rand^2*\R/2) {drug=\R/6};
+                \foreach \i in {1,...,15}
+                  \pic [rotate=rand*180] at (rand*180:rnd^2*\R/2) {drug=\R/6};
               \end{scope}
               \begin{scope}[line cap=round,draw=pale-palatinate]
                   \DrawLongitudeArc[\R]{\t};
@@ -211,82 +336,58 @@
             \draw [->,blue-palatinate] (nanoparticle.west) -- (45:\R);
             \draw [->,blue-palatinate] (ligand.west) -- (0:4/3*\R);
             \draw [->,blue-palatinate] (drug.west) -- (-45:\R/2);
-
           \end{tikzpicture}
           \begin{tikzpicture}
             \def\R{1.2em};
             \pgfmathsetseed{5665};
 
-            \matrix [%
-              anchor=base,
-            ] {%
-              \node {\alert{micelle}}; &&
-              \node {\alert{liposome}}; &&
-              \node {\alert{polymeric}}; &&
-              \node {\alert{\emph{peg}ylated}}; &&
-              \node {\alert{drug}}; \\[-1ex]
+            \matrix [anchor=base,align=center] {%
+              \node {\alert{micelle}}; &
+              \node {\alert{liposome}}; &
+              \node {\alert{polymeric}\\\alert{micelle}}; &
+              \node {\alert{\emph{peg}ylated}\\\alert{liposome}}; &
+              \node {\alert{drug}\\\alert{conjugate}}; \\[-1ex]
 
-              &&
-              &&
-              \node {\alert{micelle}}; &&
-              \node {\alert{liposome}}; &&
-              \node {\alert{conjugate}}; \\
 
+              % Micelle
               \foreach \t in {15,30,...,360}
                 \pic [rotate=\t] at (\t:\R) {fatty acid=\R/3};
-              \foreach \i in {1,...,30}
-                \pic [rotate=rand*180,very thin] at (rand*180:rand^2*\R/2) {drug=\R/6};
+              \foreach \i in {1,...,15}
+                \pic [rotate=rand*180,very thin] at (rand*180:rnd^2*\R/2) {drug=\R/6}; &
 
-              &&
-
+              % Liposome
               \foreach \t in {20,40,...,360}
                 \pic [rotate=180+\t] at (\t:2/3*\R) {fatty acid=\R/3};
               \foreach \t in {10,20,...,360}
                 \pic [rotate=\t+5] at (\t+5:4/3*\R) {fatty acid=\R/3};
-              \foreach \i in {1,...,30}
-                \pic [rotate=rand*180,very thin] at (rand*180:rand^2*\R/2) {drug=\R/6};
+              \foreach \i in {1,...,15}
+                \pic [rotate=rand*180,very thin] at (rand*180:rnd^2*\R/2) {drug=\R/6}; &
 
-              &&
-
+              % Polymeric micelle
               \foreach \t in {10,20,...,360} {%
-                \pic [palatinate,rotate=180+\t] at (\t:\R) {peg=\R/3};
+                \pic [thick,palatinate,rotate=180+\t] at (\t:\R) {peg=\R/3};
                 \pic [blue-palatinate,rotate=\t] at (\t:\R) {peg=\R/3};
               }
-              \foreach \i in {1,...,30}
-                  \pic [rotate=rand*180,very thin] at (rand*180:rand^2*\R/2) {drug=\R/6};
+              \foreach \i in {1,...,15}
+                  \pic [rotate=rand*180,very thin] at (rand*180:rnd^2*\R/2) {drug=\R/6}; &
 
-              &&
-
+              % PEGylated liposome
               \foreach \t in {20,40,...,360}
                 \pic [rotate=180+\t] at (\t:2/3*\R) {fatty acid=\R/3};
               \foreach \t in {10,20,...,360} {%
                 \pic [rotate=\t+5] at (\t+5:4/3*\R) {peg=\R/3};
                 \pic [rotate=\t+5] at (\t+5:4/3*\R) {fatty acid=\R/3}; 
               }
-              \foreach \i in {1,...,30}
-                \pic [rotate=rand*180,very thin] at (rand*180:rand^2*\R/2) {drug=\R/6};
+              \foreach \i in {1,...,15}
+                \pic [rotate=rand*180,very thin] at (rand*180:rnd^2*\R/2) {drug=\R/6}; &
 
-              &&
-
-              \shadedraw [%
-                thick,
-                blue-palatinate,
-                inner color=blue-palatinate!80!white,
-                outer color=blue-palatinate!80!black,
-                decorate,
-                decoration={random steps,segment length=\R/2,amplitude=\R/2},
-                rounded corners=\R/10,
-              ] (0,0) circle (\R);
+              % Protein-drug conjugate
+              \pic {protein=\R};
               \foreach \x in {{-\R},\R}
-                \pic [rotate=rand*180,very thin] at (\x,0) {drug=\R/2};
-
-
-
-              \\
+                \pic [rotate=rand*180] at (\x,0) {drug=\R/2}; \\
             };
-
           \end{tikzpicture}
-          \caption{Structure of common types of nanocarriers.}
+          \caption{Structure of common types of nanocarriers}
         \end{figure}
       \end{block}
 
@@ -303,7 +404,7 @@
             \begin{itemize}
               \item \alert{Nanometer scale}
               \item \alert{Biodegradable}
-              \item \alert{Not immunogenic}\hskip-5em
+              \item \alert{Non-immunogenic}
             \end{itemize}
           \column{0.45\textwidth}\vskip-1em
             \begin{itemize}
@@ -318,7 +419,7 @@
 \end{frame}
 
 \subsection{Targeted drug delivery}
-\begin{frame}{\autotitle}
+\begin{frame}[fragile]{\autotitle}
   \begin{columns}
 
     \column{0.5\textwidth}
@@ -326,77 +427,50 @@
         \begin{figure}
           \small
           \centering
-          \begin{tikzpicture}[%
-            hexagon/.style={regular polygon,regular polygon sides=6},
-            cell/.pic={%
-              \coordinate (-O) at (0,0);
-              \node [%
-                thick,
-                anchor=center,
-                draw,
-                hexagon,
-                rounded corners=2em/4,
-                minimum size=2em,
-                inner sep=0pt,
-                outer sep=2em/3,
-                pic actions,
-              ] (-wall) at (-O) {};
-              \node [%
-                anchor=center,
-                fill,
-                hexagon,
-                rounded corners=0.8em/4,
-                minimum size=0.8em,
-                inner sep=0pt,
-                outer sep=0pt,
-                pic actions,
-              ] (-nucleus) at (-O) {};
-            },
-            tissue/.pic={%
-              \coordinate (-O) at (0,0);
-              \pic (-cell 0) at (0,2em/3) {cell};
-              \foreach \i in {3,...,6}
-                \pic (-cell \i) at (-cell 0-wall.corner \i) {cell};
-            }
-          ]
-            \node [%
-              palatinate,
-            ] (healthy) {healthy tissue};
-            \coordinate [below=2.5em of healthy] (healthy general);
-            \coordinate [below=5em of healthy general] (healthy targeted);
-            \pic [palatinate] at (healthy targeted) {tissue};
-            \pic [palatinate] at (healthy general) {tissue};
-            \foreach \x in {1,...,50}
-              \pic [rotate=rand*180] at ($(1.5*2em*rand,2em*rand)+(healthy general)$) {drug=0.3em};
-            \foreach \x in {1,...,5}
-              \pic [rotate=rand*180] at ($(1.5*2em*rand,2em*rand)+(healthy targeted)$) {drug=0.3em};
+          \begin{tikzpicture}
+            \def\R{0.6em};
+            \pgfmathsetseed{1561};
 
-            \node [%
-              palatinate,
-              align=center,
-              base right=1em of healthy,
-            ] (diseased) {diseased tissue};
-            \coordinate [below=2.5em of diseased] (diseased general);
-            \coordinate [below=5em of diseased general] (diseased targeted);
-            \pic [palatinate] at (diseased targeted) {tissue};
-            \pic [palatinate] at (diseased general) {tissue};
-            \foreach \x in {51,...,100}
-              \pic [rotate=rand*180] at ($(1.5*2em*rand,2em*rand)+(diseased general)$) {drug=0.3em};
-            \foreach \x in {6,...,100}
-              \pic [rotate=rand*180] at ($(1.5*2em*rand,2em*rand)+(diseased targeted)$) {drug=0.3em};
+            \matrix [anchor=center] {%
 
-            \node [%
-              blue-palatinate,
-              align=right,
-              left=3.5em of healthy general,
-            ] {general\\drug};
-            \node [%
-              blue-palatinate,
-              align=right,
-              left=3.5em of healthy targeted,
-            ] {targeted\\drug};
+              &
+              \node {\strut\alert{healthy tissue}}; &
+              \node {\strut\alert{diseased tissue}}; \\
+
+              \node [align=right] {normal\\drug}; &
+
+              % Normal healthy tissue
+              \foreach \i in {1,...,50}
+                \pic [rotate=rand*180] at (rand*6*\R,rand*3*\R) {drug=\R/3};
+              \foreach \x in {-3,-1,...,3}
+                \foreach \y in {-1,1}
+                  \pic at ({(\x+\y/2)*\R},\y*\R) {cell=\R}; &
+
+              % Normal diseased tissue
+              \foreach \i in {51,...,100}
+                \pic [rotate=rand*180] at (rand*6*\R,rand*3*\R) {drug=\R/3};
+              \foreach \x in {-3,-1,...,3}
+                \foreach \y in {-1,1}
+                  \pic at ({(\x+\y/2)*\R},\y*\R) {cancer cell=\R}; \\[\R]
+
+              \node [align=right] {targeted\\drug}; &
+
+              % Untargeted healthy tissue
+              \foreach \i in {1,...,5}
+                \pic [rotate=rand*180] at (rand*6*\R,rand*3*\R) {drug=\R/3};
+              \foreach \x in {-3,-1,...,3}
+                \foreach \y in {-1,1}
+                  \pic at ({(\x+\y/2)*\R},\y*\R) {cell=\R}; &
+
+              % Targetted diseased tissue
+              \foreach \i in {6,...,100}
+                \pic [rotate=rand*180] at (rand*6*\R,rand*3*\R) {drug=\R/3};
+              \foreach \x in {-3,-1,...,3}
+                \foreach \y in {-1,1}
+                  \pic at ({(\x+\y/2)*\R},\y*\R) {cancer cell=\R}; \\
+            };
           \end{tikzpicture}
-          \caption{Goal is to increase drug concentration ratio for diseased tissue.}
+          \caption{Goal is to increase drug concentration ratio for diseased tissue}
         \end{figure}
       \end{block}
 
@@ -420,36 +494,157 @@
 
 \section{Passive targeting}
 
-\subsection{Vascular permeability}
-\begin{frame}{\autotitle}
-  \begin{columns}
-    \column{0.5\textwidth}
-    \column{0.5\textwidth}
-      \begin{block}{Definition: vascular permeability}
-        \begin{itemize}
-          \item Tendency for molecules to leak from \alert{blood~vessels} into \alert{interstitial~space} between cells
-        \end{itemize}
-      \end{block}
-
-      \begin{block}{Contributing factors}
-        \begin{itemize}
-          \item Permeability enhancers such as \emph{bradykinin} and \emph{nitric oxide}
-          \item Dense and defective blood vessels
-          \item Enhanced vascular permeability has been observed in \alert{solid~tumours} and \alert{inflamed~tissue}~\footcitemark{maeda2000tumor}
-        \end{itemize}
-      \end{block}
-
-  \end{columns}
-  \footcitetext{maeda2000tumor}
-\end{frame}
 
 \subsection{Enhanced permeability and retention effect}
-\begin{frame}{\autotitle}
+\begin{frame}[fragile]{\autotitle}
   \begin{columns}
     \column{0.5\textwidth}
       \begin{beamercolorbox}[rounded=true,shadow=true]{titlelike}\small
           Basis for \textbf{first generation} nanomedicines~\footcitemark{wicki2015nanomedicine}
       \end{beamercolorbox}
+
+      \begin{block}{Illustration of the EPR effect}
+        \begin{figure}
+          \small
+          \centering
+          \begin{tikzpicture}
+            \def\R{0.6em};
+            \def\wallsep{4*\R};
+            \pgfmathsetseed{9425};
+
+            \matrix (m) [anchor=center] {%
+
+              % Upper healthy tissue
+              \shade [
+                top color=gold-palatinate!0,
+                bottom color=gold-palatinate,
+                opacity=0.5,
+              ] (-6*\R,1.5*\R) rectangle (6*\R+\wallsep/2,2*\R);
+              \shade [
+                top color=gold-palatinate,
+                bottom color=gold-palatinate!0,
+                opacity=0.5,
+              ] (-6*\R,1.5*\R) rectangle (6*\R+\wallsep/2,-0.5*\R);
+              \foreach \x in {-4,-2,...,4}
+                \pic at (5/4*\x*\R,rand*\R/2) {cell=\R}; &
+
+              % Upper tumour tissue
+              \shade [
+                top color=gold-palatinate!0,
+                bottom color=gold-palatinate,
+                opacity=0.5,
+              ] (-6*\R-\wallsep/2,1.5*\R) rectangle (6*\R,2*\R);
+              \shade [
+                top color=gold-palatinate,
+                bottom color=gold-palatinate!0,
+                opacity=0.5,
+              ] (-6*\R-\wallsep/2,1.5*\R) rectangle (6*\R,-0.5*\R);
+              \foreach \x in {-5,-3,...,5}
+                \pic at (\x*\R,rand*\R/2) {cancer cell=\R}; \\[-\R/2]
+              
+              % Upper healthy capillary wall
+              \shade [
+                top color=red!0,
+                bottom color=red,
+                opacity=0.5,
+              ] (-6*\R,0) rectangle (6*\R+\wallsep/2,0.5*\R);
+              \shade [
+                top color=red,
+                bottom color=red!0,
+                opacity=0.5,
+              ] (-6*\R,0) rectangle (6*\R+\wallsep/2,-1.5*\R);
+              \foreach \x in {-5,-3,...,5}
+                \pic [rotate=rand*10] at (\x*\R,rand*\R/8) {endothelial cell=\R}; &
+
+              % Upper tumour capillary wall
+              \shade [
+                top color=red!0,
+                bottom color=red,
+                opacity=0.5,
+              ] (-6*\R-\wallsep/2,0) rectangle (6*\R,0.5*\R);
+              \shade [
+                top color=red,
+                bottom color=red!0,
+                opacity=0.5,
+              ] (-6*\R-\wallsep/2,0) rectangle (6*\R,-1.5*\R);
+              \foreach \x in {-4,-2,...,4}
+                \pic [rotate=rand*5] at (5/4*\x*\R,rand*\R/8) {endothelial cell=\R}; \\
+
+              % Lower healthy capillary wall 
+              \shade [
+                top color=red!0,
+                bottom color=red,
+                opacity=0.5,
+              ] (-6*\R,0) rectangle (6*\R+\wallsep/2,1.5*\R);
+              \shade [
+                top color=red,
+                bottom color=red!0,
+                opacity=0.5,
+              ] (-6*\R,0) rectangle (6*\R+\wallsep/2,-0.5*\R);
+              \foreach \x in {-5,-3,...,5}
+                \pic [rotate=rand*5] at (\x*\R,rand*\R/8) {endothelial cell=\R}; &
+
+              % Lower tumour capillary wall
+              \shade [
+                top color=red!0,
+                bottom color=red,
+                opacity=0.5,
+              ] (-6*\R-\wallsep/2,0) rectangle (6*\R,1.5*\R);
+              \shade [
+                top color=red,
+                bottom color=red!0,
+                opacity=0.5,
+              ] (-6*\R-\wallsep/2,0) rectangle (6*\R,-0.5*\R);
+              \foreach \x in {-4,-2,...,4}
+                \pic [rotate=rand*5] at (5/4*\x*\R,rand*\R/8) {endothelial cell=\R}; \\[-\R/2]
+
+              % Lower healthy tissue
+              \shade [
+                top color=gold-palatinate!0,
+                bottom color=gold-palatinate,
+                opacity=0.5,
+              ] (-6*\R,-1.5*\R) rectangle (6*\R+\wallsep/2,-0.5*\R);
+              \shade [
+                top color=gold-palatinate,
+                bottom color=gold-palatinate!0,
+                opacity=0.5,
+              ] (-6*\R,-1.5*\R) rectangle (6*\R+\wallsep/2,-2*\R);
+              \foreach \x in {-4,-2,...,4} 
+                \pic at (5/4*\x*\R,rand*\R/2) {cell=\R}; &
+
+              % Lower tumour tissue
+              \shade [
+                top color=gold-palatinate!0,
+                bottom color=gold-palatinate,
+                opacity=0.5,
+              ] (-6*\R-\wallsep/2,-1.5*\R) rectangle (6*\R,-0.5*\R);
+              \shade [
+                top color=gold-palatinate,
+                bottom color=gold-palatinate!0,
+                opacity=0.5,
+              ] (-6*\R-\wallsep/2,-1.5*\R) rectangle (6*\R,-2*\R);
+              \foreach \x in {-5,-3,...,5} 
+                \pic at (\x*\R,rand*\R/2) {cancer cell=\R}; \\
+            };
+
+            \foreach \x in {-3,-1,...,3}
+              \foreach \y in {-1,1} {
+                \begin{scope}[%
+                  ->,
+                  line cap=butt,
+                  thick,
+                ]
+                  \pgfmathsetmacro{\X}{(6+5/4*\x)};
+                  \draw [red] (\X*\R+\wallsep/2,0) -- (\X*\R+\wallsep/2,1.25*\y*\R);
+                  \draw [gold-palatinate] (-\X*\R-\wallsep/2,4*\y*\R) -- (-\X*\R-\wallsep/2,5.5*\y*\R);
+                \end{scope}
+              };
+            \node [anchor=base,right=0 of m.north west] {\alert{healthy tissue}};
+            \node [anchor=base,left=0 of m.north east] {\alert{tumour tissue}};
+          \end{tikzpicture}
+          \caption{\textcolor{gold-palatinate}{Lymphatic system} drainage and \textcolor{red!80}{blood vessel} permeability in solid tumours}
+        \end{figure}
+      \end{block}
 
     \column{0.5\textwidth}
       \begin{block}{Definition: EPR effect}
@@ -460,8 +655,8 @@
 
       \begin{block}{Accumulation procedure}
         \begin{enumerate}
-          \item Molecules leak into interstitial space due to \alert{enhanced vascular permeability}
-          \item \alert{Lymphatic vessels} are compressed by rapidly growing solid tumour~\footcitemark{padera2004pathology}
+          \item Molecules leak from blood into tissue due to \alert{enhanced vascular permeability}
+          \item \alert{Blocked lymphatic system} due to dense rapidly growing tumour cells~\footcitemark{padera2004pathology}
           \item Large particles become trapped
         \end{enumerate}
       \end{block}
@@ -473,26 +668,117 @@
 \section{Stimuli-responsive targeting}
 
 \subsection{Internal stimuli-responsive nanocarriers}
-\begin{frame}{\autotitle}
+\begin{frame}[fragile]{\autotitle}
   \begin{columns}
     \column{0.5\textwidth}
+      \begin{example}
+        \begin{figure}[h]
+          \small
+          \centering
+          \begin{tikzpicture}
+            \def\R{1.3em};
+            \def\arrowlen{4*\R};
+            \pgfmathsetseed{7756};
+
+            \matrix (m) [column sep=\R/2] {%
+
+              % Charged micelle
+              \foreach \t in {10,20,...,360} {
+                \pic [grey-palatinate,rotate=\t] at (\t:\R) {peg=\R/3};
+                \pic [thick,blue-palatinate,rotate=180+\t] at (\t:\R) {peg=\R/3};
+              };
+              \foreach \i in {1,...,15}
+                  \pic [rotate=rand*180,very thin] at (rand*180:rnd^2*\R/2) {drug pos=\R/6}; &
+
+              \node (pH) {pH$\searrow$};
+              \draw [->] (pH.north west) -- (pH.north east);
+              \draw [->] (pH.south west) -- (pH.south east); &
+
+              % Collapsed charged micelle
+              \foreach \t in {10,20,...,360} {
+                \pgfmathsetmacro{\randA}{rand}
+                \pgfmathsetmacro{\randB}{rand}
+                \pgfmathsetmacro{\rnd}{rnd}
+                \pic [grey-palatinate,rotate=\randA*180] at (\randB*180:\rnd*\R) {peg=\R/3};
+                \pic [thick,grey-palatinate,rotate=180+\randA*180] at (\randB*180:\rnd*\R) {peg=\R/3};
+              };
+              \foreach \i in {1,...,15}
+                  \pic [rotate=rand*180,very thin] at (rand*180:rnd*1.5*\R) {drug pos=\R/6}; \\
+
+              % Neutral micelle
+              \foreach \t in {10,20,...,360} {
+                \pic [grey-palatinate,rotate=\t] at (\t:\R) {peg=\R/3};
+                \pic [thick,grey-palatinate,rotate=180+\t] at (\t:\R) {peg=\R/3};
+              };
+              \foreach \i in {1,...,15}
+                  \pic [rotate=rand*180,very thin] at (rand*180:rnd^2*\R/2) {drug grey=\R/6}; &
+
+              \node (pH) {pH$\nearrow$};
+              \draw [->] (pH.north west) -- (pH.north east);
+              \draw [->] (pH.south west) -- (pH.south east); &
+
+              % Collapsed neutral micelle
+              \foreach \t in {10,20,...,360} {
+                \pgfmathsetmacro{\randA}{rand}
+                \pgfmathsetmacro{\randB}{rand}
+                \pgfmathsetmacro{\rnd}{rnd}
+                \pic [grey-palatinate,rotate=\randA*180] at (\randB*180:\rnd*1.5*\R) {peg=\R/3};
+                \pic [thick,palatinate,rotate=180+\randA*180] at (\randB*180:\rnd*1.5*\R) {peg=\R/3};
+              };
+              \foreach \i in {1,...,15}
+                  \pic [rotate=rand*180,very thin] at (rand*180:rnd*\R) {drug grey=\R/6}; \\
+            };
+
+            \node [align=left,right=0 of m.east] {
+              \textcolor{grey-palatinate}{$\blacksquare$ no charge} \\
+              \textcolor{palatinate}{$\blacksquare$ positive} \\
+              \textcolor{blue-palatinate}{$\blacksquare$ negative}
+            };
+          \end{tikzpicture}
+          \caption{Polymeric micelles with pH-responsive polymers for electrostatic release~\footcitemark{sun2014engineered}}
+        \end{figure}
+      \end{example}
+
     \column{0.5\textwidth}
       \begin{block}{Bioindicators used to trigger release}
+        \begin{columns}[t,onlytextwidth]
+          \column{0.5\textwidth}\vskip-1em
+            \begin{itemize}
+              \item \alert{pH}
+              \item \alert{Enzymes}
+            \end{itemize}
+          \column{0.5\textwidth}\vskip-1em
+            \begin{itemize}
+              \item \alert{Redox potential}
+              \item \alert{Temperature}
+            \end{itemize}
+        \end{columns}
+      \end{block}
+
+      \begin{block}{Target sites for pH-responsive nanocarriers}
         \begin{itemize}
-          \item Tumours have been observed with lower \alert{pH} than healthy tissue~\footcitemark{tannock1989acid,gerweck1996cellular}
-          \item Individual organelles maintain their own unique pH and \alert{redox potential}
-          \item Intracellular and extracellular space maintain different redox potentials~\textbf{\footcitemark{saito2003drug}}
+          \item \alert{Tumours} have been observed with lower pH than healthy tissue~\footcitemark{tannock1989acid,gerweck1996cellular}
+          \item Individual \alert{organelles} within the cell maintain their own unique pH~\footcitemark{wicki2015nanomedicine}
         \end{itemize}
       \end{block}
 
   \end{columns}
-  \footcitetext{gerweck1996cellular,tannock1989acid,saito2003drug}
+  \footcitetext{sun2014engineered,gerweck1996cellular,tannock1989acid,wicki2015nanomedicine}
 \end{frame}
 
 \subsection{External stimuli-responsive nanocarriers}
 \begin{frame}{\autotitle}
   \begin{columns}
     \column{0.5\textwidth}
+      \begin{example}
+        \begin{figure}[h]
+
+
+
+          \caption{Liposomes with thermosensitive polymers for diffusive release~\footcitemark{ta2013thermosensitive}}
+        \end{figure}
+      \end{example}
+
     \column{0.5\textwidth}
       \begin{block}{Mechanisms used to externally trigger release}
         \begin{columns}[t,onlytextwidth]
@@ -510,12 +796,12 @@
         \end{columns}
       \end{block}
   \end{columns}
+  \footcitetext{ta2013thermosensitive}
 \end{frame}
 
 \section{Active targeting}
 
 \subsection{Surface ligands}
-
 \begin{frame}{\autotitle}
   \begin{columns}
     \column{0.5\textwidth}
@@ -527,8 +813,9 @@
 \end{frame}
 
 
-\subsection{Surface ligands}
+\section{Examples}
 
+\subsection{Drugs on the market and in clinical trials}
 \begin{frame}{\autotitle}
   \begin{columns}
     \column{0.5\textwidth}
