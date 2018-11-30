@@ -35,7 +35,6 @@
 
   \setbeamertemplate{bibliography item}[text]
   \setbeamertemplate{blocks}[rounded][shadow=true]
-  \setbeamertemplate{caption}[numbered]
   \setbeamertemplate{frametitle}[default][wd=\textwidth]
   % \setbeamertemplate{navigation symbols}{}
   \setbeamertemplate{title page}[default][rounded=true,shadow=true]
@@ -65,6 +64,15 @@
   \usetikzlibrary{shapes.geometric}
   \usetikzlibrary{shapes.misc}
   \usetikzlibrary{decorations.pathmorphing}
+
+  \newcommand\tikznum[1]{{\tikzexternaldisable\tikz[baseline=(char.base)]{%
+    \node [%
+      circle,
+      fill=blue-palatinate,
+      text=white,
+      inner sep=0.5pt,
+      font=\scriptsize
+    ] (char) {\textnormal{#1}};}}}
 
   \newcommand\pgfmathsinandcos[3]{%
     \pgfmathsetmacro#1{sin(#3)}%
@@ -96,6 +104,24 @@
       >=latex,
       line cap=round,
       line join=round,
+    },
+    endosome/.pic={%
+      \filldraw [
+        ultra thick,
+        draw=palatinate,
+        fill=white,
+        decorate,
+        decoration={random steps,segment length=#1/3,amplitude=#1/6},
+        rounded corners=#1/9,
+      ] (0,0) circle (#1);
+    },
+    nanoparticle/.pic={%
+      \shadedraw [%
+        ultra thick,
+        blue-palatinate,
+        pic actions,
+        ball color=blue-palatinate
+      ] (0,0) circle (#1);
     },
     drug/.pic={%
       \shadedraw [
@@ -176,6 +202,17 @@
         arc (345:15:#1/4)
         -- cycle;
       \shade [shading angle=180,ball color=gold-palatinate,opacity=0.5] (0,0) circle (#1/10);
+    },
+    receptor/.pic={%
+      \shadedraw [%
+        thick,
+        palatinate,
+        top color=black!80!white,
+        bottom color=black!80!black,
+      ] (240:#1/3) arc (240:-60:#1/3)
+        -- (#1/3,-#1)
+        -- (-#1/3,-#1)
+        -- cycle;
     },
     lipid/.pic={%
       \foreach \y in {{#1/8},{-#1/8}}
@@ -323,7 +360,7 @@
                 -- ({270-\angEl*cos(\angLatA)}:\R)
                 arc ({270-\angEl*cos(\angLatA)}:{-90-\angEl*cos(\angLatB)}:\R)
                 -- cycle;
-              \shadedraw [palatinate,ultra thick,ball color=palatinate] (0,0) circle (\R);
+              \pic {nanoparticle=\R};
             \end{scope}
             \foreach \t in {\angLatA,\angLatB} {%
               \pgfmathsetseed{4689}
@@ -337,7 +374,7 @@
                   \DrawLongitudeArc[\R]{\t};
               \end{scope}
             }
-            \foreach \t in {-30,0,...,240}
+            \foreach \t in {72,144,...,216,360}
               \pic [rotate=\t] at (\t:\R) {ligand=\R/3};
             \node [anchor=west,align=left] (nanoparticle) at (45:1.5*\R) {\alert{nanoparticle}};
             \node [anchor=west,align=left] (ligand) at (0:2*\R) {targeting ligand};
@@ -355,7 +392,7 @@
               \node {\alert{micelle}}; &
               \node {\alert{liposome}}; &
               \node {\alert{polymeric}\\\alert{micelle}}; &
-              \node {\alert{\emph{peg}ylated}\\\alert{liposome}}; &
+              \node {\alert{immuno-}\\\alert{liposome}}; &
               \node {\alert{drug}\\\alert{conjugate}}; \\[-1ex]
 
 
@@ -409,12 +446,13 @@
       \end{block}
 
       \begin{block}{Characteristics}
-        \begin{columns}[t,onlytextwidth]
+        \begin{columns}[t,onlytextwidth]\small
           \column{0.55\textwidth}\vskip-1em
             \begin{itemize}
               \item \alert{Nanometer scale}
               \item \alert{Biodegradable}
               \item \alert{Non-immunogenic}
+              \item \alert{Long half-life}
             \end{itemize}
           \column{0.45\textwidth}\vskip-1em
             \begin{itemize}
@@ -503,7 +541,6 @@
 \end{frame}
 
 \section{Passive targeting}
-
 
 \subsection{Enhanced permeability and retention effect}
 \begin{frame}[fragile]{\autotitle}
@@ -814,8 +851,8 @@
                   \pic [rotate=180+\t+\h+10] at (\t+\h+10:3/4*\R) {lipid grey=\R/3};
                 \foreach \h in {10,20,...,50}
                   \pic [rotate=\t+\h+10] at (\t+\h+10:4/3*\R) {lipid grey=\R/3};
-                \pic [rotate=180+\t+10,very thick,palatinate] at (\t+10:\R) {peg=\R/3};
-                \pic [rotate=180+\t+10,thick,blue-palatinate] at (\t+10:\R) {peg=\R/3};
+                \pic [rotate=165+\t+10,very thick,palatinate] at (\t+10:\R) {peg=\R/3};
+                \pic [rotate=195+\t+10,thick,blue-palatinate] at (\t+10:\R) {peg=\R/3};
               };
               \foreach \i in {1,...,4}
                 \pic [rotate=rand*180,very thin] at (rand*180:rnd*\R/2) {drug=\R/6};
@@ -857,18 +894,111 @@
 
 \section{Active targeting}
 
-\subsection{Surface ligands}
-\begin{frame}{\autotitle}
+\subsection{Nanocarriers with surface ligands}
+\begin{frame}[fragile]{\autotitle}
   \begin{columns}
     \column{0.5\textwidth}
+      \begin{block}{Receptor-mediated endocytosis of nanocarriers}
+        \begin{figure}[h]
+          \begin{tikzpicture}
+            \def\R{1.2em};
+            \pgfmathsetseed{9845};
+
+            % Cell wall
+            \begin{scope}
+              \clip (-6*\R,-4*\R) rectangle (7.5*\R,4*\R);
+              \shadedraw [%
+                ultra thick,
+                palatinate,
+                left color=palatinate!50!black,
+                right color=palatinate!50!white,
+                decorate,
+                decoration={random steps,segment length=\R/2,amplitude=\R/4},
+                rounded corners=\R/6,
+              ] (8*\R,5*\R)
+                -- (-5.5*\R,5*\R)
+                -- (-3.75*\R,-0.35*\R)
+                arc (120:-120:1.5*\R)
+                -- (-3*\R,-5*\R)
+                -- (8*\R,-5*\R)
+                -- cycle;
+              \node [text=pale-palatinate] at (0,3*\R) {target cell};
+
+              % Cell wall receptors
+              \pic [rotate=rand*15] at (-5*\R,3.5*\R) {receptor=0.4*\R};
+              \pic [rotate=rand*15] at (-4*\R,0.5*\R) {receptor=0.4*\R};
+              \pic [rotate=rand*15] at (-3.5*\R,-3.5*\R) {receptor=0.4*\R};
+            \end{scope}
+            \node [text=palatinate] at (-5.5*\R,-3.7*\R) {receptor};
+
+            \matrix [
+              nodes={%
+                circle,
+                anchor=south west,
+                fill=blue-palatinate,
+                text=white,
+                inner sep=0.5pt,
+                font=\scriptsize,
+              },
+            ] {%
+
+              % Step 1: Binding
+              \pic at (0:1.5*\R) {receptor=0.4*\R};
+              \pic {nanoparticle=\R};
+              \foreach \t in {72,144,...,360}
+                \pic [rotate=\t] at (\t:\R) {ligand=0.5*\R};
+              \node at (135:1.5*\R) {1}; &&[1.5*\R]&
+
+              % Step 4: Drug release
+              \pic [loosely dash dot] {endosome=1.5*\R};
+              \foreach \t in {72,216,360}
+                \pic [rotate=\t] at (\t:1.5*\R) {receptor=0.4*\R};
+              \pic [loosely dash dot,opacity=0.5] {nanoparticle=\R};
+              \foreach \t in {72,144,...,360}
+                \pic [rotate=\t+rand*60,opacity=0.5] at (\t:\R) {ligand=0.5*\R};
+              \foreach \i in {1,...,15}
+                  \pic [rotate=rand*180,very thin] at (rand*180:rnd*1.5*\R) {drug=\R/6}; 
+              \node at (135:1.5*\R) {4}; \\&
+
+              % Step 3: Endocytosis
+              \foreach \t in {72,360}
+                \pic [rotate=\t] at (\t:1.5*\R) {receptor=0.4*\R};
+              \pic {nanoparticle=\R};
+              \foreach \t in {72,144,...,360}
+                \pic [rotate=\t] at (\t:\R) {ligand=0.5*\R};
+              \node at (135:1.5*\R) {2}; &[1.5*\R]
+
+              % Step 3: Endosome transport
+              \pic {endosome=1.5*\R};
+              \foreach \t in {72,216,360}
+                \pic [rotate=\t] at (\t:1.5*\R) {receptor=0.4*\R};
+              \pic {nanoparticle=\R};
+              \foreach \t in {72,144,...,360}
+                \pic [rotate=\t] at (\t:\R) {ligand=0.5*\R}; 
+              \node at (135:1.5*\R) {3}; \\
+            };
+          \end{tikzpicture}
+          \caption{Nanocarrier binding~\tikznum{1}, endocytosis~\tikznum{2}, endosome transport~\tikznum{3}, and drug release~\tikznum{4}}
+        \end{figure}
+      \end{block}
+
     \column{0.5\textwidth}
       \begin{block}{Definition: active targeting}
         \begin{itemize}
-            \item
+            \item Targeted drug delivery to specific cell types by encouraging cell uptake
         \end{itemize}
       \end{block}
 
+      \begin{block}{Cell uptake procedure}
+        \begin{enumerate}
+            \item Passive targeting delivers nanocarrier to solid tumour, \emph{eg.} via EPR effect~\footcitemark{maeda2000tumor}
+            \item Surface \alert{ligands} on nanocarrier bind to surface \alert{receptors} on target cell
+            \item Cell absorbs nanocarrier via \alert{receptor-mediated endocytosis}~\footcitemark{sun2014engineered}
+        \end{enumerate}
+      \end{block}
+
   \end{columns}
+  \footcitetext{maeda2000tumor,sun2014engineered}
 \end{frame}
 
 
