@@ -36,7 +36,7 @@
   \setbeamertemplate{bibliography item}[text]
   \setbeamertemplate{blocks}[rounded][shadow=true]
   \setbeamertemplate{frametitle}[default][wd=\textwidth]
-  % \setbeamertemplate{navigation symbols}{}
+  \setbeamertemplate{navigation symbols}{}
   \setbeamertemplate{title page}[default][rounded=true,shadow=true]
 
   \setbeamerfont{block title}{size=\small}
@@ -56,6 +56,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{multicol}
 \usepackage{siunitx}
+\usepackage{textcomp}
 \usepackage{tikz}
   \usetikzlibrary{calc}
   \usetikzlibrary{external}
@@ -332,7 +333,7 @@
 \date{\today}
 \logo{\Large\includegraphics[height=1em]{img/Durham.png}}
 
-\begin{document}
+\begin{document}{}
 
 \frame{\titlepage}
 
@@ -1004,13 +1005,33 @@
 
 \section{Examples}
 
-\subsection{Drugs on the market and in clinical trials}
+\subsection{Nanocarrier chemotherapy drugs on the market}
 \begin{frame}{\autotitle}
   \begin{columns}
     \column{0.5\textwidth}
+      \begin{block}{Doxil\textsuperscript{\textregistered}/Caelyx\textsuperscript{\textregistered}~\footcitemark{harrison1995liposomal}}
+        \begin{itemize}
+          \item \alert{\emph{Peg}ylated liposomal \emph{doxorubicin}}
+          \item \alert{Immunoliposome} using \emph{polyethylene glycol} (\emph{PEG}) stealth coating
+          \item \alert{Passively targeted} \emph{doxorubicin}
+          \item Reduced cardiac side effects~\footcitemark{wicki2015nanomedicine}
+          \item Clinical trials are exploring \alert{actively targeted variations}~\footcitemark{mamot2012tolerability}
+        \end{itemize}
+      \end{block}
+
     \column{0.5\textwidth}
+      \begin{block}{Abraxane\textsuperscript{\textregistered}~\footcitemark{desai2006increased}}
+        \begin{itemize}
+          \item \alert{Nanoparticle \emph{albumin}-bound \emph{paclitaxel}}
+          \item \alert{Protein-drug conjugate}---\emph{albumin} is a common transport protein in blood
+          \item \alert{Passively targeted} \emph{paclitaxel}
+          \item Improved solubility~\footcitemark{wicki2015nanomedicine}
+          \item Unavailable on NHS from 2015--2017, partly due to cost~\footcitemark{nice2015paclitaxel}
+        \end{itemize}
+      \end{block}
 
   \end{columns}
+  \footcitetext{wicki2015nanomedicine,harrison1995liposomal,mamot2012tolerability,desai2006increased,nice2015paclitaxel}
 \end{frame}
 
 \begin{frame}
