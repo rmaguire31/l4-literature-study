@@ -1,0 +1,44 @@
+\useoutertheme[footline=authorinstitute,subsection=false]{miniframes}
+\useinnertheme{circles}
+\usefonttheme{default}
+
+\definecolor{palatinate}{RGB}{126,49,123}
+\definecolor{pale-palatinate}{RGB}{216,172,214}
+\definecolor{grey-palatinate}{RGB}{150,142,133}
+\definecolor{gold-palatinate}{RGB}{159,161,97}
+\definecolor{blue-palatinate}{RGB}{0,99,136}
+
+\setbeamercolor*{palette primary}{fg=blue-palatinate}
+\setbeamercolor*{palette secondary}{fg=palatinate,bg=pale-palatinate}
+\setbeamercolor*{palette tertiary}{fg=white,bg=palatinate}
+\setbeamercolor*{palette quaternary}{fg=white,bg=gold-palatinate}
+
+\setbeamercolor*{normal text}{parent=palette primary}
+\setbeamercolor*{footline}{parent=palette secondary}
+\setbeamercolor*{headline}{parent=palette tertiary}
+\setbeamercolor*{titlelike}{parent=palette secondary}
+
+\setbeamercolor*{structure}{parent=normal text}
+\setbeamercolor*{title in head/foot}{parent=headline}
+\setbeamercolor*{section in head/foot}{parent=headline}
+\setbeamercolor*{author in head/foot}{parent=footline}
+\setbeamercolor*{institute in head/foot}{parent=footline}
+
+\setbeamercolor*{alerted text}{parent=normal text,fg=palatinate}
+
+\setbeamercolor*{block title}{fg=white,bg=blue-palatinate}
+\setbeamercolor*{block body}{parent=normal text,bg=pale-palatinate!5}
+
+\setbeamercolor*{block title example}{fg=white,bg=gold-palatinate}
+\setbeamercolor*{block body example}{parent=normal text,bg=pale-palatinate!5}
+
+\setbeamertemplate{bibliography item}[text]
+\setbeamertemplate{blocks}[rounded][shadow=true]
+\setbeamertemplate{frametitle}[default][wd=\textwidth]
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{title page}[default][rounded=true,shadow=true]
+
+\setbeamerfont{block title}{size=\small}
+
+\BeforeBeginEnvironment{frame}{\citereset}
+\renewcommand{\footnoterule}{}
