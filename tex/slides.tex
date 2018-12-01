@@ -1,48 +1,6 @@
 \documentclass[aspectratio=169,compress]{beamer}
+  \usetheme{Durham}
   \useoutertheme[footline=authorinstitute,subsection=false]{miniframes}
-  \useinnertheme{circles}
-  \usefonttheme{default}
-
-  \definecolor{palatinate}{RGB}{126,49,123}
-  \definecolor{pale-palatinate}{RGB}{216,172,214}
-  \definecolor{grey-palatinate}{RGB}{150,142,133}
-  \definecolor{gold-palatinate}{RGB}{159,161,97}
-  \definecolor{blue-palatinate}{RGB}{0,99,136}
-
-  \setbeamercolor*{palette primary}{fg=blue-palatinate}
-  \setbeamercolor*{palette secondary}{fg=palatinate,bg=pale-palatinate}
-  \setbeamercolor*{palette tertiary}{fg=white,bg=palatinate}
-  \setbeamercolor*{palette quaternary}{fg=white,bg=gold-palatinate}
-
-  \setbeamercolor*{normal text}{parent=palette primary}
-  \setbeamercolor*{footline}{parent=palette secondary}
-  \setbeamercolor*{headline}{parent=palette tertiary}
-  \setbeamercolor*{titlelike}{parent=palette secondary}
-
-  \setbeamercolor*{structure}{parent=normal text}
-  \setbeamercolor*{title in head/foot}{parent=headline}
-  \setbeamercolor*{section in head/foot}{parent=headline}
-  \setbeamercolor*{author in head/foot}{parent=footline}
-  \setbeamercolor*{institute in head/foot}{parent=footline}
-
-  \setbeamercolor*{alerted text}{parent=normal text,fg=palatinate}
-
-  \setbeamercolor*{block title}{fg=white,bg=blue-palatinate}
-  \setbeamercolor*{block body}{parent=normal text,bg=pale-palatinate!5}
-
-  \setbeamercolor*{block title example}{fg=white,bg=gold-palatinate}
-  \setbeamercolor*{block body example}{parent=normal text,bg=pale-palatinate!5}
-
-  \setbeamertemplate{bibliography item}[text]
-  \setbeamertemplate{blocks}[rounded][shadow=true]
-  \setbeamertemplate{frametitle}[default][wd=\textwidth]
-  \setbeamertemplate{navigation symbols}{}
-  \setbeamertemplate{title page}[default][rounded=true,shadow=true]
-
-  \setbeamerfont{block title}{size=\small}
-
-  \BeforeBeginEnvironment{frame}{\citereset}
-  \renewcommand{\footnoterule}{}
 
 \usepackage[bibstyle=science,citestyle=numeric-comp]{biblatex}
   \bibliography{references.bib}
@@ -65,7 +23,6 @@
   \usetikzlibrary{shapes.geometric}
   \usetikzlibrary{shapes.misc}
   \usetikzlibrary{decorations.pathmorphing}
-
   \newcommand\tikznum[1]{{\tikzexternaldisable\tikz[baseline=(char.base)]{%
     \node [%
       circle,
@@ -74,7 +31,6 @@
       inner sep=0.5pt,
       font=\scriptsize
     ] (char) {\textnormal{#1}};}}}
-
   \newcommand\pgfmathsinandcos[3]{%
     \pgfmathsetmacro#1{sin(#3)}%
     \pgfmathsetmacro#2{cos(#3)}%
@@ -98,7 +54,6 @@
     \tikzset{current plane/.prefix style={scale=#1}}
     \clip[current plane] (90:1) arc (90:270:1);
   }
-
   % Common pic definitions
   \tikzset{
     every picture/.append style={
@@ -337,9 +292,6 @@
 
 \frame{\titlepage}
 
-% \section*{Outline}
-% \frame{\tableofcontents}
-
 \section{Introduction}
 
 \subsection{Nanocarrier delivery systems}
@@ -350,8 +302,9 @@
         \begin{figure}[h]
           \small
           \centering
+          \tikzsetnextfilename{nanocarrier_structure}
           \begin{tikzpicture}
-            \def\R{0.8};
+            \def\R{0.7};
             \def\angEl{35};
             \def\angLatA{75};
             \def\angLatB{135};
@@ -377,24 +330,25 @@
             }
             \foreach \t in {72,144,...,216,360}
               \pic [rotate=\t] at (\t:\R) {ligand=\R/3};
-            \node [anchor=west,align=left] (nanoparticle) at (45:1.5*\R) {\alert{nanoparticle}};
-            \node [anchor=west,align=left] (ligand) at (0:2*\R) {targeting ligand};
+            \node [anchor=west,align=left] (nanoparticle) at (45:1.5*\R) {nanoparticle};
+            \node [anchor=west,align=left] (ligand) at (0:1.5*\R) {targeting ligand};
             \node [anchor=west,align=left] (drug) at (-45:1.5*\R) {active drug};
 
             \draw [->,blue-palatinate] (nanoparticle.west) -- (45:\R);
             \draw [->,blue-palatinate] (ligand.west) -- (0:4/3*\R);
             \draw [->,blue-palatinate] (drug.west) -- (-45:\R/2);
           \end{tikzpicture}
+          \tikzsetnextfilename{nanocarrier_types}
           \begin{tikzpicture}
             \def\R{1.2em};
             \pgfmathsetseed{5665};
 
-            \matrix [anchor=base,align=center] {%
-              \node {\alert{micelle}}; &
-              \node {\alert{liposome}}; &
-              \node {\alert{polymeric}\\\alert{micelle}}; &
-              \node {\alert{immuno-}\\\alert{liposome}}; &
-              \node {\alert{drug}\\\alert{conjugate}}; \\[-1ex]
+            \matrix [anchor=base,align=center,text=palatinate] {%
+              \node {micelle}; &
+              \node {liposome}; &
+              \node {polymeric\\micelle}; &
+              \node {immuno-\\liposome}; &
+              \node {drug\\conjugate}; \\[-1ex]
 
 
               % Micelle
@@ -435,7 +389,9 @@
                 \pic [rotate=rand*180] at (\x,0) {drug=\R/2}; \\
             };
           \end{tikzpicture}
-          \caption{Structure of common types of nanocarriers}
+          \caption{Structure of common types of nanocarriers\\
+            \textcolor{palatinate!}{$\blacksquare$~hydrophobic/lipophilic},
+            \textcolor{blue-palatinate!}{$\blacksquare$~hydrophilic}}
         \end{figure}
       \end{block}
 
@@ -476,6 +432,7 @@
         \begin{figure}
           \small
           \centering
+          \tikzsetnextfilename{targeted_drug_delivery}
           \begin{tikzpicture}
             \def\R{0.6em};
             \pgfmathsetseed{1561};
@@ -483,8 +440,8 @@
             \matrix [anchor=center] {%
 
               &
-              \node {\strut\alert{healthy tissue}}; &
-              \node {\strut\alert{diseased tissue}}; \\
+              \node [text=palatinate] {healthy tissue\strut}; &
+              \node [text=palatinate] {diseased tissue\strut}; \\
 
               \node [align=right] {normal\\drug}; &
 
@@ -555,6 +512,7 @@
         \begin{figure}
           \small
           \centering
+          \tikzsetnextfilename{epr_effect}
           \begin{tikzpicture}
             \def\R{0.6em};
             \def\wallsep{4*\R};
@@ -687,8 +645,8 @@
                   \draw [gold-palatinate] (-\X*\R-\wallsep/2,4*\y*\R) -- (-\X*\R-\wallsep/2,5.5*\y*\R);
                 \end{scope}
               };
-            \node [anchor=base,right=0 of m.north west] {\alert{healthy tissue}};
-            \node [anchor=base,left=0 of m.north east] {\alert{tumour tissue}};
+            \node [anchor=base,right=0 of m.north west,text=palatinate] {healthy tissue};
+            \node [anchor=base,left=0 of m.north east,text=palatinate] {tumour tissue};
           \end{tikzpicture}
           \caption{\textcolor{gold-palatinate}{Lymphatic system} drainage and \textcolor{red!80}{blood vessel} permeability in solid tumours}
         \end{figure}
@@ -723,6 +681,7 @@
         \begin{figure}[h]
           \small
           \centering
+          \tikzsetnextfilename{ph_responsive}
           \begin{tikzpicture}
             \def\R{1.2em};
             \def\arrowlen{4*\R};
@@ -822,6 +781,7 @@
         \begin{figure}[h]
           \small
           \centering
+          \tikzsetnextfilename{temp_responsive}
           \begin{tikzpicture}
             \def\R{1.7em};
             \pgfmathsetseed{4456}
@@ -901,6 +861,7 @@
     \column{0.5\textwidth}
       \begin{block}{Receptor-mediated endocytosis of nanocarriers}
         \begin{figure}[h]
+          \tikzsetnextfilename{endocytosis}
           \begin{tikzpicture}
             \def\R{1.2em};
             \pgfmathsetseed{9845};
@@ -1034,15 +995,13 @@
   \footcitetext{wicki2015nanomedicine,harrison1995liposomal,mamot2012tolerability,desai2006increased,nice2015paclitaxel}
 \end{frame}
 
-\begin{frame}
+\section*{References}
+
+\begin{frame}[b]
   \begin{beamercolorbox}[rounded=true,shadow=true,sep=8pt]{titlelike}\centering\Large
     Thank you, any questions?
   \end{beamercolorbox}
-  \begin{block}{References}\bibfont
-    \begin{multicols}{2}[\vskip-1em]
-      \printbibliography
-    \end{multicols}
-  \end{block}
+  \footcitetext{wicki2015nanomedicine,mamot2012tolerability,padera2004pathology,sun2014engineered,tannock1989acid,gerweck1996cellular,ta2013thermosensitive,kono2001thermosensitive,jhaveri2014stimuli,ganta2008review,scherer2002magnetofection,harrison1995liposomal,mamot2012tolerability,desai2006increased,nice2015paclitaxel}
 \end{frame}
 
 \end{document}
