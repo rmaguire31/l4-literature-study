@@ -330,25 +330,34 @@
             }
             \foreach \t in {72,144,...,216,360}
               \pic [rotate=\t] at (\t:\R) {ligand=\R/3};
-            \node [anchor=west,align=left] (nanoparticle) at (45:1.5*\R) {nanoparticle};
-            \node [anchor=west,align=left] (ligand) at (0:1.5*\R) {targeting ligand};
-            \node [anchor=west,align=left] (drug) at (-45:1.5*\R) {active drug};
+            \node [anchor=west,align=left] (nanoparticle)
+              at (45:1.5*\R) {nanoparticle};
+            \node [anchor=west,align=left] (ligand)
+              at (0:1.5*\R) {targeting ligand};
+            \node [anchor=west,align=left] (drug)
+              at (-45:1.5*\R) {active drug};
 
             \draw [->,blue-palatinate] (nanoparticle.west) -- (45:\R);
             \draw [->,blue-palatinate] (ligand.west) -- (0:4/3*\R);
             \draw [->,blue-palatinate] (drug.west) -- (-45:\R/2);
-          \end{tikzpicture}
+          \end{tikzpicture}\vskip1ex
           \tikzsetnextfilename{nanocarrier_types}
           \begin{tikzpicture}
             \def\R{1.2em};
             \pgfmathsetseed{5665};
 
-            \matrix [anchor=base,align=center,text=palatinate] {%
+            \matrix [%
+              anchor=base,
+              align=center,
+              text=palatinate,
+              inner sep=0,
+              column sep=0.8em,
+            ] {%
               \node {micelle}; &
               \node {liposome}; &
               \node {polymeric\\micelle}; &
               \node {immuno-\\liposome}; &
-              \node {drug\\conjugate}; \\[-1ex]
+              \node {drug\\conjugate}; \\
 
 
               % Micelle
@@ -437,7 +446,7 @@
             \def\R{0.6em};
             \pgfmathsetseed{1561};
 
-            \matrix [anchor=center] {%
+            \matrix [anchor=center,inner sep=0] {%
 
               &
               \node [text=palatinate] {healthy tissue\strut}; &
@@ -645,8 +654,16 @@
                   \draw [gold-palatinate] (-\X*\R-\wallsep/2,4*\y*\R) -- (-\X*\R-\wallsep/2,5.5*\y*\R);
                 \end{scope}
               };
-            \node [anchor=base,right=0 of m.north west,text=palatinate] {healthy tissue};
-            \node [anchor=base,left=0 of m.north east,text=palatinate] {tumour tissue};
+            \node [%
+              inner sep=0,
+              above right=0 of m.north west,
+              text=palatinate,
+            ] {healthy tissue\strut};
+            \node [
+              inner sep=0,
+              above left=0 of m.north east,
+              text=palatinate
+            ] {tumour tissue\strut};
           \end{tikzpicture}
           \caption{\textcolor{gold-palatinate}{Lymphatic system} drainage and \textcolor{red!80}{blood vessel} permeability in solid tumours}
         \end{figure}
@@ -667,7 +684,7 @@
         \end{enumerate}
       \end{block}
 
-  \end{columns}\vskip-0.2em
+  \end{columns}
   \footcitetext{maeda2000tumor,wicki2015nanomedicine,padera2004pathology}
 \end{frame}
 
@@ -730,7 +747,7 @@
                 \pgfmathsetmacro{\randB}{rand}
                 \pgfmathsetmacro{\rnd}{rnd}
                 \pic [grey-palatinate,rotate=\randA*180] at (\randB*180:\rnd*1.5*\R) {peg=\R/3};
-                \pic [thick,palatinate,rotate=180+\randA*180] at (\randB*180:\rnd*1.5*\R) {peg=\R/3};
+                \pic [thick,blue-palatinate,rotate=180+\randA*180] at (\randB*180:\rnd*1.5*\R) {peg=\R/3};
               };
               \foreach \i in {1,...,15}
                   \pic [rotate=rand*180,very thin] at (rand*180:rnd*\R) {drug grey=\R/6}; \\
@@ -1001,7 +1018,9 @@
   \begin{beamercolorbox}[rounded=true,shadow=true,sep=8pt]{titlelike}\centering\Large
     Thank you, any questions?
   \end{beamercolorbox}
-  \footcitetext{wicki2015nanomedicine,mamot2012tolerability,padera2004pathology,sun2014engineered,tannock1989acid,gerweck1996cellular,ta2013thermosensitive,kono2001thermosensitive,jhaveri2014stimuli,ganta2008review,scherer2002magnetofection,harrison1995liposomal,mamot2012tolerability,desai2006increased,nice2015paclitaxel}
+  \begin{multicols*}{2}
+    \printbibliography
+  \end{multicols*}
 \end{frame}
 
 \end{document}
